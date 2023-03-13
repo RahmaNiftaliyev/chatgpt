@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import openai from './openai.config'
 
-function App() {
+
+const App = () => {
+
+  const[question, setquestion] = React.useState("")
+  const [answer, setAnswer] = React.useState("")
+
+  const runPrompt = async () =>{
+
+    const response = await openai.createCompletion({
+      model : "text-davinci-003",
+      prompt : question,
+      max_tokens : 2000,
+      temperature: 1
+    })
+    console.log(response);
+    console.log(response.data.choices[0].text);
+    setAnswer(response.data.choices[0].text)
+    
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <input placeholder='Sual ver' value={question} onChange={(e)=>{setquestion(e.target.value)}}/>
+      <button onClick={runPrompt}>ChatGPT</button>
+      <p>{answer}</p>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
